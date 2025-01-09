@@ -1,9 +1,12 @@
+import { BrowserRouter } from "react-router"
+import Routes from './routes'
+
 function App() {
 
   return (
-    <>
-      <h1>Hello world!</h1>
-    </>
+    <BrowserRouter>
+      <Routes />
+    </BrowserRouter>
   )
 }
 
