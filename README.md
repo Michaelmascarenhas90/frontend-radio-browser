@@ -6,6 +6,10 @@ Este é um desafio para testar seus conhecimentos de Front-end;
 
 O objetivo é avaliar a sua forma de estruturação e autonomia em decisões para construir algo escalável utilizando o Framework sugerido na vaga aplicada.
 
+### Veja online:
+
+https://frontend-radio-browser-phi.vercel.app/
+
 [SPOILER] As instruções de entrega e apresentação do challenge estão no final deste Readme (=
 
 ### Antes de começar
