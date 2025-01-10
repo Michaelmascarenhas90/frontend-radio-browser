@@ -12,7 +12,7 @@ Este projeto é uma aplicação responsiva que permite listar radios ao redor do
 
 ## Veja online: 
 
-https://frontend-radio-browser-phi.vercel.app/
+https://frontend-radio-browser-abfuiukt6-michaelmascarenhas90s-projects.vercel.app/
 
 ## Funcionalidades
 

@@ -1,27 +1,10 @@
 import { Box, Container, Fab, IconButton, TextField } from '@mui/material'
-import type { RadioData } from '../../types/radios.interface'
+import type { DrawerRadiosProps } from './drawer.interface'
 import Drawer from '../../components/Drawer'
 import CardRadio from '../../components/CardRadio'
 import SkeletonCard from '../../components/Skeleton'
 import { Add, ArrowBack, ArrowForward, FilterAlt, FilterAltOff,  } from '@mui/icons-material'
 import { useState } from 'react'
-
-export type DrawerRadiosProps = {
-  drawerOpen: boolean
-  handleDrawer: () => void
-  isMobile: boolean
-  filterRadios: string
-  setFilterRadios: (value: string) => void
-  filterLanguage: string
-  setFilterLanguage: (value: string) => void
-  setFilterCodeCountry: (value: string) => void
-  filterCodeCountry: string
-  getFavorites: () => void
-  resetFilters: () => void
-  radios: RadioData[]
-  nextPage: () => void
-  prevPage: () => void
-}
 
 const DrawerRadios = ({
   drawerOpen,
