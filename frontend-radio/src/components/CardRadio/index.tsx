@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Box,
   Card,
@@ -11,6 +11,7 @@ import {
   Favorite,
   FavoriteBorderOutlined,
   PlayArrow,
+  Pause
 } from '@mui/icons-material'
 import type { CardProps, FavoriteProps } from './card.interface'
 
@@ -59,6 +60,21 @@ const CardRadio = ({
   updateFavorites
 }: CardProps) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
+  const [ isPlaying, seIsPlaying ] = useState<boolean>(false)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  const handlePlaying = () => {
+    if (audioRef.current) {
+      if(isPlaying) {
+        audioRef.current.pause()
+      } else {
+        audioRef.current.play()
+      }
+
+      seIsPlaying(prev => !prev)
+
+    } 
+  }
 
   const verifyFavorites = useCallback(() => {
   const favoritesString = localStorage.getItem('favorites') || '[]';
@@ -128,15 +144,27 @@ const CardRadio = ({
           </Typography>
         </CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
-          <IconButton aria-label="play/pause">
-            <PlayArrow
-              sx={{
-                height: 38,
-                width: 38,
-                color: (theme) => theme.palette.text.primary,
-              }}
-            />
+          <IconButton onClick={() => handlePlaying()} aria-label="play/pause">
+            {!isPlaying
+              ? (
+              <PlayArrow
+                sx={{
+                  height: 38,
+                  width: 38,
+                  color: (theme) => theme.palette.text.primary,
+                }}
+              />
+              ) : (
+                <Pause
+                  sx={{
+                    height: 38,
+                    width: 38,
+                    color: (theme) => theme.palette.text.primary,
+                  }}
+                />
+              )}
           </IconButton>
+          <audio ref={audioRef} src={radioUrl} preload='auto' />
         </Box>
       </Box>
       <Box
