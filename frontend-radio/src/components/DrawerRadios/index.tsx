@@ -1,8 +1,9 @@
-import { Box, Container, TextField, Typography } from '@mui/material'
+import { Box, Container, IconButton, TextField } from '@mui/material'
 import type { RadioData } from '../../types/radios.interface'
 import Drawer from '../../components/Drawer'
 import CardRadio from '../../components/CardRadio'
 import SkeletonCard from '../../components/Skeleton'
+import { ArrowBack, ArrowForward } from '@mui/icons-material'
 
 export type DrawerRadiosProps = {
   drawerOpen: boolean
@@ -10,9 +11,10 @@ export type DrawerRadiosProps = {
   isMobile: boolean
   filterRadios: string
   setFilterRadios: (value: string) => void
-  radiosFiltered: RadioData[]
   getRadio: () => void
   radios: RadioData[]
+  nextPage: () => void
+  prevPage: () => void
 }
 
 const DrawerRadios = ({
@@ -21,9 +23,11 @@ const DrawerRadios = ({
   isMobile,
   filterRadios,
   setFilterRadios,
-  radiosFiltered,
+
   getRadio,
   radios,
+  nextPage,
+  prevPage,
 }: DrawerRadiosProps) => {
   return (
     <Drawer
@@ -37,6 +41,7 @@ const DrawerRadios = ({
             width={'100%'}
             display={'flex'}
             justifyContent={'center'}
+            flexDirection={'column'}
           >
             <TextField
               label="Buscar Rádio"
@@ -46,40 +51,36 @@ const DrawerRadios = ({
               value={filterRadios}
               onChange={(e) => setFilterRadios(e.target.value)}
             />
+            <Box
+              display={'flex'}
+              flexDirection={'row'}
+              justifyContent={'space-between'}
+              bgcolor={(theme) => theme.palette.background.paper}
+              borderRadius={'13px'}
+              marginTop={'16px'}
+              marginBottom={'16px'}
+            >
+              <IconButton onClick={() => prevPage()}>
+                <ArrowBack
+                  sx={{
+                  color: (theme) => theme.palette.text.primary,
+                  }}
+                />
+              </IconButton>
+                  
+              <IconButton onClick={() => nextPage()}>
+                <ArrowForward
+                  sx={{
+                  color: (theme) => theme.palette.text.primary,
+                  }}
+                />
+              </IconButton>
+
+            </Box>
           </Box>
           <Container>
-            {filterRadios.length > 0 ? (
-              <>
-                {radiosFiltered.length > 0 ? (
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '16px',
-                    }}
-                  >
-                    {radiosFiltered.map((radio) => {
-                      return (
-                        <CardRadio
-                          key={radio.changeuuid}
-                          radioId={radio.changeuuid}
-                          name={radio.name}
-                          imageUrl={radio.favicon}
-                          tags={radio.tags}
-                          country={radio.country}
-                          countryCode={radio.countrycode}
-                          radioUrl={radio.url_resolved}
-                          updateFavorites={() => getRadio()}
-                        />
-                      )
-                    })}
-                  </Box>
-                ) : (
-                  <Typography variant="h5">não tem nada aqui...</Typography>
-                )}
-              </>
-            ) : (
-              <>
+          
+               <>
                 {radios.length > 0 ? (
                   <Box
                     sx={{
@@ -109,8 +110,7 @@ const DrawerRadios = ({
                     <SkeletonCard key={index} />
                   ))
                 )}
-              </>
-            )}
+              </>   
           </Container>
         </>
       }

@@ -14,31 +14,55 @@ import CardRadio from '../../components/CardRadio'
 import { FavoriteProps } from '../../components/CardRadio/card.interface'
 import { SearchOutlined } from '@mui/icons-material'
 import DrawerRadios from '../../components/DrawerRadios'
+import { useSearchParams } from 'react-router'
+
+const LIMIT_ITEMS = '10'
 
 const Home = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 760)
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true)
   const [radios, setRadios] = useState<RadioData[]>([])
-  const [filterRadios, setFilterRadios] = useState<string>('')
-  const [radiosFiltered, setRadiosFiltered] = useState<RadioData[]>([])
 
   const [favorites, setFavorites] = useState<FavoriteProps[]>([])
   const [favoriteFiltered, setFavoriteFiltered] = useState<FavoriteProps[]>([])
   const [openFilterFavorite, setOpenFilterFavorite] = useState<boolean>(false)
   const [filterFavorite, setFilterFavorite] = useState<string>('')
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // filtros para request
+  const currentPage = searchParams.get('page') || '1'
+  const searchText = searchParams.get('name') || ''
+  const language = searchParams.get('language') || ''
+  const countryCode = searchParams.get('countrycode') || ""
+
   const theme = useTheme()
 
-  const handleSetFilterRadios = (event: string) => {
-    setFilterRadios(event)
+  const handleSetFilterRadios = (nameSearch: string) => {
+    updateSearchParams('name', nameSearch)
   }
+
+  const updateSearchParams = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams)
+    if (value) {
+      params.set(key, value)
+    } else {
+      params.delete(key)
+    }
+    setSearchParams(params)
+  }
+
+  const setPage = (value: number) => {
+    const valueString = value.toString()
+    updateSearchParams('page', valueString)
+  } 
 
   const handleDrawer = () => {
     setDrawerOpen((prev) => !prev)
   }
 
-  const getRadio = async () => {
+  const getRadio = async (page: string, name: string) => {
     try {
-      const response = await fetchRadios()
+      const response = await fetchRadios({limit: LIMIT_ITEMS, offset: page, name})
       setRadios(response)
     } catch (error) {
       console.error(`Erro in getRadio: ${error}`)
@@ -53,8 +77,8 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    getRadio()
-  }, [])
+    getRadio(currentPage, searchText)
+  }, [currentPage, searchText])
 
   const handleFilteredFavorites = useCallback(() => {
     if (filterFavorite.length > 0) {
@@ -66,17 +90,6 @@ const Home = () => {
       setFavoriteFiltered([])
     }
   }, [favorites, filterFavorite])
-
-  const handleFilteredRadios = useCallback(() => {
-    if (filterRadios.length > 0) {
-      const filteredRadiosAll = radios.filter((radio) =>
-        radio.name.toLowerCase().includes(filterRadios.toLowerCase())
-      )
-      setRadiosFiltered(filteredRadiosAll)
-    } else {
-      setRadiosFiltered([])
-    }
-  }, [filterRadios, radios])
 
   useEffect(() => {
     getFavorites()
@@ -94,10 +107,6 @@ const Home = () => {
     handleFilteredFavorites()
   }, [handleFilteredFavorites])
 
-  useEffect(() => {
-    handleFilteredRadios()
-  }, [handleFilteredRadios])
-
   return (
     <body
       style={{
@@ -110,12 +119,13 @@ const Home = () => {
       <DrawerRadios
         drawerOpen={drawerOpen}
         handleDrawer={() => handleDrawer()}
-        filterRadios={filterRadios}
-        getRadio={() => getRadio()}
+        filterRadios={searchText}
+        getRadio={() => getFavorites()}
         isMobile={isMobile}
         radios={radios}
-        radiosFiltered={radiosFiltered}
         setFilterRadios={(e) => handleSetFilterRadios(e)}
+        prevPage={() => setPage(Number(currentPage) -1)}
+        nextPage={() => setPage(Number(currentPage) +1)}
       />
 
       <Header onCloseDrawer={() => handleDrawer()} />
