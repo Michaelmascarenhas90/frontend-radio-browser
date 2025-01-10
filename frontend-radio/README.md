@@ -10,7 +10,7 @@ Este projeto é uma aplicação responsiva que permite listar radios ao redor do
 - **HTML5 Audio API**
 - **Vite**
 
-## Veja online: 
+## Veja online:
 
 https://frontend-radio-browser-abfuiukt6-michaelmascarenhas90s-projects.vercel.app/
 
@@ -20,9 +20,9 @@ https://frontend-radio-browser-abfuiukt6-michaelmascarenhas90s-projects.vercel.a
 - **Favoritas/Desfavoritas:** Suas rádios favoritas são listadas na tela principal
 - **Reprodução das rádios:** Basta clicar no play para reproduzir a rádio que você quer ouvir
 - **Filtragem de Radios:** Filtre a rádio que deseja seja nos favoritos ou na listagem geral. Na listagem geral de radios online
-a busca por nome ocorre a cada caracter digitado, busca por pais e idioma somente ao clicar no botão de busca (+)
+  a busca por nome ocorre a cada caracter digitado, busca por pais e idioma somente ao clicar no botão de busca (+)
 - **Botão para limpar filtro** Foi inserido um botão que tem a funcionalidade de limpar o filtro
-- **Busca dos favoritados** A busca dos favoritos busca somente as rádios que foram atribuidas aos favoritos, para buscar todas as rádios basta no drawer que lista todas as rádios disponíveis. 
+- **Busca dos favoritados** A busca dos favoritos busca somente as rádios que foram atribuidas aos favoritos, para buscar todas as rádios basta no drawer que lista todas as rádios disponíveis.
 
 ---
 
@@ -46,7 +46,6 @@ Siga os passos abaixo para rodar localmente:
 `npm install`
 
 3. **Iniciar a aplicação**
-
 
 `npm run dev` ou `npm run start`
 

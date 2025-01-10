@@ -192,13 +192,14 @@ const CardRadio = ({
       </Box>
       {isFavorite ? (
         <IconButton onClick={handleFavoriteRadio}>
-          <Favorite fontSize="medium" sx={{color: (theme) => theme.palette.error.dark}} />
+          <Favorite
+            fontSize="medium"
+            sx={{ color: (theme) => theme.palette.error.dark }}
+          />
         </IconButton>
       ) : (
-        <IconButton  onClick={handleFavoriteRadio}>
-          <FavoriteBorderOutlined
-            fontSize="medium"
-          />
+        <IconButton onClick={handleFavoriteRadio}>
+          <FavoriteBorderOutlined fontSize="medium" />
         </IconButton>
       )}
     </Card>

@@ -1,15 +1,28 @@
-import { Box, Container, Fab, IconButton, TextField } from '@mui/material'
+import {
+  Box,
+  Button,
+  Container,
+  Fab,
+  IconButton,
+  TextField,
+} from '@mui/material'
 import type { DrawerRadiosProps } from './drawer.interface'
 import Drawer from '../../components/Drawer'
 import CardRadio from '../../components/CardRadio'
 import SkeletonCard from '../../components/Skeleton'
-import { Add, ArrowBack, ArrowForward, FilterAlt, FilterAltOff,  } from '@mui/icons-material'
+import {
+  Add,
+  ArrowBack,
+  ArrowForward,
+  FilterAltOff,
+  FilterList,
+  FilterListOff,
+} from '@mui/icons-material'
 import { useState } from 'react'
 
 const DrawerRadios = ({
   drawerOpen,
   handleDrawer,
-
   isMobile,
   filterRadios,
   setFilterRadios,
@@ -61,40 +74,43 @@ const DrawerRadios = ({
                 flexDirection={'row'}
                 justifyContent={'flex-start'}
                 gap={'8px'}
+              ></Box>
+              <Box
+                width={'100%'}
+                display={'flex'}
+                flexDirection={'row'}
+                justifyContent={'flex-start'}
+                gap={'8px'}
               >
-              </Box>
-                  <Box
-                    width={'100%'}
-                    display={'flex'}
-                    flexDirection={'row'}
-                    justifyContent={'flex-start'}
-                    gap={'8px'}
-                    >
-                    <TextField
-                      label="Buscar Rádio"
-                      color="primary"
-                      focused
-                      placeholder="Busque sua rádio"
-                      value={filterRadios}
-                      onChange={(e) => setFilterRadios(e.target.value)}
-                      />
-                    <Fab
+                <TextField
+                  label="Buscar Rádio"
                   color="primary"
-                  aria-label="add"
-                  onClick={() => setMoreFilters((prev) => !prev)}
-                  >
-                  <FilterAlt />
-                </Fab>
+                  focused
+                  placeholder="Busque sua rádio"
+                  value={filterRadios}
+                  onChange={(e) => setFilterRadios(e.target.value)}
+                />
                 <Fab
                   color="primary"
                   aria-label="add"
-                  onClick={() => clearFilters()}
-                  >
-                  <FilterAltOff />
+                  onClick={() => setMoreFilters((prev) => !prev)}
+                >
+                  {moreFilters ? <FilterListOff /> : <FilterList />}
                 </Fab>
-                  </Box>
-                {moreFilters && (
-                    <>
+
+                <Button
+                  size={'small'}
+                  variant="outlined"
+                  sx={{
+                    color: (theme) => theme.palette.text.primary,
+                    borderColor: (theme) => theme.palette.text.primary,
+                  }}
+                >
+                  Limpar Filtros
+                </Button>
+              </Box>
+              {moreFilters && (
+                <>
                   <Box
                     width={'100%'}
                     display={'flex'}

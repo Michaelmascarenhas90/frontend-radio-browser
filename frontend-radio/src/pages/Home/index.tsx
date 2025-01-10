@@ -69,7 +69,7 @@ const Home = () => {
   }
 
   const clearParams = () => {
-    setSearchParams({});
+    setSearchParams({})
   }
 
   const getRadio = async (
