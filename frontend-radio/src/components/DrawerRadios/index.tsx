@@ -14,7 +14,6 @@ import {
   Add,
   ArrowBack,
   ArrowForward,
-  FilterAltOff,
   FilterList,
   FilterListOff,
 } from '@mui/icons-material'
@@ -105,6 +104,7 @@ const DrawerRadios = ({
                     color: (theme) => theme.palette.text.primary,
                     borderColor: (theme) => theme.palette.text.primary,
                   }}
+                  onClick={() => clearFilters()}
                 >
                   Limpar Filtros
                 </Button>
