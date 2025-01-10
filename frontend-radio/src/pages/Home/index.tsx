@@ -8,7 +8,6 @@ import CardRadio from '../../components/CardRadio'
 import SkeletonCard from '../../components/Skeleton'
 
 const Home = () => {
-  // const [loading, setLoading] = useState<boolean>(false)
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 760)
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true)
   const [radios, setRadios] = useState<RadioData[]>([])
@@ -18,7 +17,6 @@ const Home = () => {
   }
 
   const getRadio = async () => {
-    // setLoading(true)
     try {
       const response = await fetchRadios()
       setRadios(response)
