@@ -1,6 +1,7 @@
-import type { RadioData } from "../types/radios.interface"
+import type { RadioData } from '../types/radios.interface'
 
-const baseUrl = 'https://de1.api.radio-browser.info/json/stations/search?limit=10'
+const baseUrl =
+  'https://de1.api.radio-browser.info/json/stations/search?limit=10'
 
 export const fetchRadios = async (): Promise<RadioData[]> => {
   const response = await fetch(baseUrl)
