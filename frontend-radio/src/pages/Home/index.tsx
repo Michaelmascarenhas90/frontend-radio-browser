@@ -37,7 +37,7 @@ const Home = () => {
   useEffect(() => {
     getRadio()
     getFavorites()
-  }, [radios])
+  }, [getFavorites, radios])
 
   useEffect(() => {
     const handleResize = () => {
