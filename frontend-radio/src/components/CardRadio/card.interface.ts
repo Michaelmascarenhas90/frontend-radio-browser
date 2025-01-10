@@ -6,4 +6,5 @@ export type CardProps = {
   radioUrl: string
   tags: string
   radioId: string
+  updateFavorites: () => void
 }

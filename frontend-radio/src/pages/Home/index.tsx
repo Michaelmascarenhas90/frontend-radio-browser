@@ -12,6 +12,7 @@ const Home = () => {
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true)
   const [radios, setRadios] = useState<RadioData[]>([])
   const theme = useTheme()
+
   const handleDrawer = () => {
     setDrawerOpen((prev) => !prev)
   }
@@ -25,9 +26,15 @@ const Home = () => {
     }
   }
 
+  const getFavorites = () => {
+    return JSON.parse(localStorage.getItem('favorites') || '[]')
+  }
+
+  const favoriteRadios = radios.filter(radio => getFavorites().includes(radio.changeuuid))
+
   useEffect(() => {
     getRadio()
-  }, [])
+  }, [radios])
 
   useEffect(() => {
     const handleResize = () => {
@@ -64,6 +71,7 @@ const Home = () => {
                     country={radio.country}
                     countryCode={radio.countrycode}
                     radioUrl={radio.url_resolved}
+                    updateFavorites={() => getRadio()}
                   />
                 )
               })}
@@ -82,16 +90,50 @@ const Home = () => {
             width: '100%',
             minHeight: '80px',
             display: 'flex',
+            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
+            gap: '16px'
           }}
         >
           <Typography
             variant="h4"
-            sx={{ color: (theme) => theme.palette.text.primary }}
+            sx={{
+              color: (theme) => theme.palette.text.primary,
+              marginTop: '16px'
+            }}
           >
             Favoritas
           </Typography>
+
+          <Box
+            sx={{
+              width: '100%',
+              minHeight: '80px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            {
+              favoriteRadios.length > 0 
+              ? (favoriteRadios.map((radio) => (
+                
+                  <CardRadio
+                    radioId={radio.changeuuid}
+                    name={radio.name}
+                    imageUrl={radio.favicon}
+                    tags={radio.tags}
+                    country={radio.country}
+                    countryCode={radio.countrycode}
+                    radioUrl={radio.url_resolved}
+                    updateFavorites={() => getRadio()}
+                  />
+                
+              ))) 
+              : (<Typography variant='h5'>não tem nada aqui...</Typography>)}
+        </Box>
         </Box>
       </Container>
     </body>

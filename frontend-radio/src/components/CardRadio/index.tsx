@@ -36,6 +36,7 @@ const CardRadio = ({
   countryCode,
   tags,
   radioId,
+  updateFavorites
 }: CardProps) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
 
@@ -47,6 +48,7 @@ const CardRadio = ({
   const handleFavoriteRadio = () => {
     toggleFavorite(radioId)
     verifyFavorites()
+    updateFavorites()
   }
 
   useEffect(() => {
