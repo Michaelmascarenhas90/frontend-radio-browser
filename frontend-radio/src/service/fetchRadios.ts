@@ -22,7 +22,7 @@ export const fetchRadios = async ({
   if (name) queryParams.append('name', name)
   if (offset) queryParams.append('offset', offset.toString())
   if (language) queryParams.append('language', language)
-  if (countrycode) queryParams.append('countryCode', countrycode)
+  if (countrycode) queryParams.append('countrycode', countrycode)
 
   // Construir a URL completa
   const url = `${baseUrl}?${queryParams.toString()}`
