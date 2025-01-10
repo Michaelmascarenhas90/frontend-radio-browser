@@ -5,4 +5,5 @@ export type CardProps = {
   country?: string | null
   radioUrl: string
   tags: string
+  radioId: string
 }

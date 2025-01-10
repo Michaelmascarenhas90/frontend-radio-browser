@@ -1,3 +1,4 @@
+import { useCallback, useEffect, useState } from 'react'
 import {
   Box,
   Card,
@@ -6,9 +7,27 @@ import {
   IconButton,
   Typography,
 } from '@mui/material'
-// import { useTheme } from '@mui/material/styles'
-import { PlayArrow } from '@mui/icons-material'
+import {
+  Favorite,
+  FavoriteBorderOutlined,
+  PlayArrow,
+} from '@mui/icons-material'
 import type { CardProps } from './card.interface'
+
+const toggleFavorite = (radioId: string) => {
+  const saveFavoriteString = localStorage.getItem('favorites') || '[]'
+  const savedFavorites: string[] = JSON.parse(saveFavoriteString)
+
+  const isFavorite = savedFavorites.includes(radioId)
+
+  if (isFavorite) {
+    const newFavorites = savedFavorites.filter((id: string) => id !== radioId)
+    localStorage.setItem('favorites', JSON.stringify(newFavorites))
+  } else {
+    savedFavorites.push(radioId)
+    localStorage.setItem('favorites', JSON.stringify(savedFavorites))
+  }
+}
 
 const CardRadio = ({
   name,
@@ -16,7 +35,24 @@ const CardRadio = ({
   country,
   countryCode,
   tags,
+  radioId,
 }: CardProps) => {
+  const [isFavorite, setIsFavorite] = useState<boolean>(false)
+
+  const verifyFavorites = useCallback(() => {
+    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
+    setIsFavorite(favorites.includes(radioId))
+  }, [radioId])
+
+  const handleFavoriteRadio = () => {
+    toggleFavorite(radioId)
+    verifyFavorites()
+  }
+
+  useEffect(() => {
+    verifyFavorites()
+  }, [verifyFavorites])
+
   return (
     <Card
       sx={{
@@ -89,6 +125,14 @@ const CardRadio = ({
           alt={tags}
         />
       </Box>
+      {isFavorite ? (
+        <Favorite fontSize="medium" onClick={handleFavoriteRadio} />
+      ) : (
+        <FavoriteBorderOutlined
+          fontSize="medium"
+          onClick={handleFavoriteRadio}
+        />
+      )}
     </Card>
   )
 }

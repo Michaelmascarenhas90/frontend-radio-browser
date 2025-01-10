@@ -5,6 +5,7 @@ import type { RadioData } from '../../types/radios.interface'
 import Drawer from '../../components/Drawer'
 import { fetchRadios } from '../../service/fetchRadios'
 import CardRadio from '../../components/CardRadio'
+import SkeletonCard from '../../components/Skeleton'
 
 const Home = () => {
   // const [loading, setLoading] = useState<boolean>(false)
@@ -55,11 +56,12 @@ const Home = () => {
         onClose={() => handleDrawer()}
         isMobile={isMobile}
         contentDrawer={
-          radios.length > 0 && (
+          radios.length > 0 ? (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {radios.map((radio) => {
                 return (
                   <CardRadio
+                    radioId={radio.changeuuid}
                     name={radio.name}
                     imageUrl={radio.favicon}
                     tags={radio.tags}
@@ -70,6 +72,10 @@ const Home = () => {
                 )
               })}
             </Box>
+          ) : (
+            Array.from({ length: 3 }).map((_, index) => (
+              <SkeletonCard key={index} />
+            ))
           )
         }
       />
