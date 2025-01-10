@@ -16,8 +16,7 @@ Este projeto é uma aplicação responsiva que permite listar radios ao redor do
 - **Reprodução das rádios:** Basta clicar no play para reproduzir a rádio que você quer ouvir
 - **Filtragem de Radios:** Filtre a rádio que deseja seja nos favoritos ou na listagem geral
 
-
-______________
+---
 
 ## Instalação e execução
 
@@ -26,24 +25,23 @@ Siga os passos abaixo para rodar localmente:
 ### Pré Requisitos
 
 **Node.js**
-**NPM** 
+**NPM**
 
 ### Como instalar e rodar o projeto
 
 1. **Clone o repositorio**
 
-```git clone https://github.com/Michaelmascarenhas90/frontend-radio-browser```
+`git clone https://github.com/Michaelmascarenhas90/frontend-radio-browser`
 
 2. **Instale as dependencias**
 
-```npm install```
+`npm install`
 
 3. **Iniciar a aplicação**
 
-```npm run dev``` ou ```npm run start```
+`npm run dev` ou `npm run start`
 
 A aplicação está rodando na porta http://localhost:5173/
-
 
 ```js
 export default tseslint.config({

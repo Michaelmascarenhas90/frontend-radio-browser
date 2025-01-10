@@ -33,7 +33,7 @@ const Home = () => {
   const currentPage = searchParams.get('page') || '1'
   const searchText = searchParams.get('name') || ''
   const language = searchParams.get('language') || ''
-  const countryCode = searchParams.get('countrycode') || ""
+  const countrycode = searchParams.get('countrycode') || ''
 
   const theme = useTheme()
 
@@ -41,7 +41,15 @@ const Home = () => {
     updateSearchParams('name', nameSearch)
   }
 
-  const updateSearchParams = (key: string, value: string) => {
+  const handleFilterLanguage = (language: string) => {
+    updateSearchParams('language', language)
+  }
+
+  const handleFilterCodeCountry = (countrycode: string) => {
+    updateSearchParams('countrycode', countrycode)
+  }
+
+  const updateSearchParams = (key: string, value?: string) => {
     const params = new URLSearchParams(searchParams)
     if (value) {
       params.set(key, value)
@@ -54,15 +62,30 @@ const Home = () => {
   const setPage = (value: number) => {
     const valueString = value.toString()
     updateSearchParams('page', valueString)
-  } 
+  }
 
   const handleDrawer = () => {
     setDrawerOpen((prev) => !prev)
   }
 
-  const getRadio = async (page: string, name: string) => {
+  const clearParams = () => {
+    setSearchParams({});
+  }
+
+  const getRadio = async (
+    page: string,
+    name: string,
+    language: string,
+    countrycode: string
+  ) => {
     try {
-      const response = await fetchRadios({limit: LIMIT_ITEMS, offset: page, name})
+      const response = await fetchRadios({
+        limit: LIMIT_ITEMS,
+        offset: page,
+        name,
+        language,
+        countrycode,
+      })
       setRadios(response)
     } catch (error) {
       console.error(`Erro in getRadio: ${error}`)
@@ -76,9 +99,13 @@ const Home = () => {
     return setFavorites(favoritesStorage)
   }, [])
 
+  const handleRadios = useCallback(() => {
+    getRadio(currentPage, searchText, language, countrycode)
+  }, [countrycode, currentPage, language, searchText])
+
   useEffect(() => {
-    getRadio(currentPage, searchText)
-  }, [currentPage, searchText])
+    handleRadios()
+  }, [handleRadios])
 
   const handleFilteredFavorites = useCallback(() => {
     if (filterFavorite.length > 0) {
@@ -120,12 +147,17 @@ const Home = () => {
         drawerOpen={drawerOpen}
         handleDrawer={() => handleDrawer()}
         filterRadios={searchText}
-        getRadio={() => getFavorites()}
+        getFavorites={() => getFavorites()}
+        resetFilters={() => clearParams()}
         isMobile={isMobile}
         radios={radios}
         setFilterRadios={(e) => handleSetFilterRadios(e)}
-        prevPage={() => setPage(Number(currentPage) -1)}
-        nextPage={() => setPage(Number(currentPage) +1)}
+        setFilterCodeCountry={(e) => handleFilterCodeCountry(e)}
+        filterCodeCountry={countrycode}
+        filterLanguage={language}
+        setFilterLanguage={(e) => handleFilterLanguage(e)}
+        prevPage={() => setPage(Number(currentPage) - 1)}
+        nextPage={() => setPage(Number(currentPage) + 1)}
       />
 
       <Header onCloseDrawer={() => handleDrawer()} />
