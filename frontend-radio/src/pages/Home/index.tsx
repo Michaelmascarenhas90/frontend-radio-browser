@@ -27,8 +27,6 @@ const Home = () => {
     }
   }
 
-  console.log(isMobile)
-
   useEffect(() => {
     getRadio()
   }, [])
