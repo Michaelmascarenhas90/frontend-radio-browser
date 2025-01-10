@@ -9,22 +9,28 @@ import {
 } from '@mui/material'
 import Header from '../../components/Header'
 import type { RadioData } from '../../types/radios.interface'
-import Drawer from '../../components/Drawer'
 import { fetchRadios } from '../../service/fetchRadios'
 import CardRadio from '../../components/CardRadio'
-import SkeletonCard from '../../components/Skeleton'
 import { FavoriteProps } from '../../components/CardRadio/card.interface'
 import { SearchOutlined } from '@mui/icons-material'
+import DrawerRadios from '../../components/DrawerRadios'
 
 const Home = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 760)
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true)
   const [radios, setRadios] = useState<RadioData[]>([])
+  const [filterRadios, setFilterRadios] = useState<string>('')
+  const [radiosFiltered, setRadiosFiltered] = useState<RadioData[]>([])
+
   const [favorites, setFavorites] = useState<FavoriteProps[]>([])
   const [favoriteFiltered, setFavoriteFiltered] = useState<FavoriteProps[]>([])
-  const [openFilter, setOpenFilter] = useState<boolean>(false)
-  const [filter, setFilter] = useState<string>('')
+  const [openFilterFavorite, setOpenFilterFavorite] = useState<boolean>(false)
+  const [filterFavorite, setFilterFavorite] = useState<string>('')
   const theme = useTheme()
+
+  const handleSetFilterRadios = (event: string) => {
+    setFilterRadios(event)
+  }
 
   const handleDrawer = () => {
     setDrawerOpen((prev) => !prev)
@@ -50,6 +56,28 @@ const Home = () => {
     getRadio()
   }, [])
 
+  const handleFilteredFavorites = useCallback(() => {
+    if (filterFavorite.length > 0) {
+      const filtered = favorites.filter((radio) =>
+        radio.name.toLowerCase().includes(filterFavorite.toLowerCase())
+      )
+      setFavoriteFiltered(filtered)
+    } else {
+      setFavoriteFiltered([])
+    }
+  }, [favorites, filterFavorite])
+
+  const handleFilteredRadios = useCallback(() => {
+    if (filterRadios.length > 0) {
+      const filteredRadiosAll = radios.filter((radio) =>
+        radio.name.toLowerCase().includes(filterRadios.toLowerCase())
+      )
+      setRadiosFiltered(filteredRadiosAll)
+    } else {
+      setRadiosFiltered([])
+    }
+  }, [filterRadios, radios])
+
   useEffect(() => {
     getFavorites()
   }, [getFavorites])
@@ -63,19 +91,13 @@ const Home = () => {
   }, [])
 
   useEffect(() => {
-    if (filter.length > 0) {
-      const filtered = favorites.filter((radio) =>
-        radio.name.toLowerCase().includes(filter.toLowerCase())
-      )
-      setFavoriteFiltered(filtered)
+    handleFilteredFavorites()
+  }, [handleFilteredFavorites])
 
-    } else {
-      setFavoriteFiltered([])
-    }
-  }, [filter, favorites])
+  useEffect(() => {
+    handleFilteredRadios()
+  }, [handleFilteredRadios])
 
-
-  console.log({texto: filter, qtdResultados: favoriteFiltered.length})
   return (
     <body
       style={{
@@ -85,38 +107,18 @@ const Home = () => {
         overflow: 'auto',
       }}
     >
-      <Header onCloseDrawer={() => handleDrawer()} />
-      <Drawer
-        open={drawerOpen}
-        onClose={() => handleDrawer()}
+      <DrawerRadios
+        drawerOpen={drawerOpen}
+        handleDrawer={() => handleDrawer()}
+        filterRadios={filterRadios}
+        getRadio={() => getRadio()}
         isMobile={isMobile}
-        contentDrawer={
-          radios.length > 0 ? (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {radios.map((radio) => {
-                return (
-                  <CardRadio
-                    key={radio.changeuuid}
-                    radioId={radio.changeuuid}
-                    name={radio.name}
-                    imageUrl={radio.favicon}
-                    tags={radio.tags}
-                    country={radio.country}
-                    countryCode={radio.countrycode}
-                    radioUrl={radio.url_resolved}
-                    updateFavorites={() => getRadio()}
-                  />
-                )
-              })}
-            </Box>
-          ) : (
-            Array.from({ length: 3 }).map((_, index) => (
-              <SkeletonCard key={index} />
-            ))
-          )
-        }
+        radios={radios}
+        radiosFiltered={radiosFiltered}
+        setFilterRadios={(e) => handleSetFilterRadios(e)}
       />
 
+      <Header onCloseDrawer={() => handleDrawer()} />
       <Container>
         <Box
           sx={{
@@ -147,95 +149,87 @@ const Home = () => {
             >
               Favoritas
             </Typography>
-            <IconButton onClick={() => setOpenFilter((prev) => !prev)}>
+            <IconButton onClick={() => setOpenFilterFavorite((prev) => !prev)}>
               <SearchOutlined
                 fontSize="large"
                 sx={{ color: (theme) => theme.palette.text.primary }}
               />
             </IconButton>
           </Box>
-          {openFilter && (
+          {openFilterFavorite && (
             <TextField
               label="Buscar Rádio"
               color="primary"
               focused
               placeholder="Busque sua rádio favorita"
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
+              value={filterFavorite}
+              onChange={(e) => setFilterFavorite(e.target.value)}
             />
           )}
           <>
-            {
-              filter.length > 0
-              ?
-              (
-                <Box
-            sx={{
-              width: '100%',
-              minHeight: '80px',
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '16px',
-            }}
-          >
-            {favoriteFiltered.length > 0 ? (
-              favoriteFiltered.map((radio) => (
-                <CardRadio
-                  key={radio.radioId}
-                  radioId={radio.radioId}
-                  name={radio.name}
-                  imageUrl={radio.imageUrl}
-                  tags={radio.tags}
-                  country={radio.country}
-                  countryCode={radio.countryCode}
-                  radioUrl={radio.radioUrl}
-                  updateFavorites={() => getFavorites()}
-                />
-              ))
+            {filterFavorite.length > 0 ? (
+              <Box
+                sx={{
+                  width: '100%',
+                  minHeight: '80px',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '16px',
+                }}
+              >
+                {favoriteFiltered.length > 0 ? (
+                  favoriteFiltered.map((radio) => (
+                    <CardRadio
+                      key={radio.radioId}
+                      radioId={radio.radioId}
+                      name={radio.name}
+                      imageUrl={radio.imageUrl}
+                      tags={radio.tags}
+                      country={radio.country}
+                      countryCode={radio.countryCode}
+                      radioUrl={radio.radioUrl}
+                      updateFavorites={() => getFavorites()}
+                    />
+                  ))
+                ) : (
+                  <Typography variant="h5">não tem nada aqui...</Typography>
+                )}
+              </Box>
             ) : (
-              <Typography variant="h5">não tem nada aqui...</Typography>
+              <Box
+                sx={{
+                  width: '100%',
+                  minHeight: '80px',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: '16px',
+                }}
+              >
+                {favorites.length > 0 ? (
+                  favorites.map((radio) => (
+                    <CardRadio
+                      key={radio.radioId}
+                      radioId={radio.radioId}
+                      name={radio.name}
+                      imageUrl={radio.imageUrl}
+                      tags={radio.tags}
+                      country={radio.country}
+                      countryCode={radio.countryCode}
+                      radioUrl={radio.radioUrl}
+                      updateFavorites={() => getFavorites()}
+                    />
+                  ))
+                ) : (
+                  <Typography variant="h5">não tem nada aqui...</Typography>
+                )}
+              </Box>
             )}
-          </Box>
-
-              )
-              : 
-              (
-                <Box
-            sx={{
-              width: '100%',
-              minHeight: '80px',
-              display: 'flex',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '16px',
-            }}
-          >
-            {favorites.length > 0 ? (
-              favorites.map((radio) => (
-                <CardRadio
-                  key={radio.radioId}
-                  radioId={radio.radioId}
-                  name={radio.name}
-                  imageUrl={radio.imageUrl}
-                  tags={radio.tags}
-                  country={radio.country}
-                  countryCode={radio.countryCode}
-                  radioUrl={radio.radioUrl}
-                  updateFavorites={() => getFavorites()}
-                />
-              ))
-            ) : (
-              <Typography variant="h5">não tem nada aqui...</Typography>
-            )}
-          </Box>
-                
-              )
-            }
           </>
         </Box>
       </Container>
