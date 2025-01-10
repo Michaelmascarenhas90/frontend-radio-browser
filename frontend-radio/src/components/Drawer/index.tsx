@@ -17,7 +17,7 @@ const Drawer = ({ contentDrawer, onClose, open, isMobile }: DrawerProps) => {
       onClose={onClose}
       PaperProps={{
         sx: {
-          width: isMobile ? '100%' : '30%',
+          width: isMobile ? '100%' : '40%',
           backgroundColor: (theme) => theme.palette.background.default,
           padding: '8px',
         },
