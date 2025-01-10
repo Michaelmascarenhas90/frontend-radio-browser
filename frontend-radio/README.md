@@ -1,17 +1,49 @@
-# React + TypeScript + Vite
+# Radios Favoritas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto é uma aplicação responsiva que permite listar radios ao redor do mundo, favoritar suas rádios e ouvi-las
 
-Currently, two official plugins are available:
+## Tecnologias Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React** (com TypeScript)
+- **Material UI**
+- **HTML5 Audio API**
+- **Vite**
 
-## Expanding the ESLint configuration
+## Funcionalidades
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Listagem de Rádios:** Apresenta várias rádios
+- **Favoritas/Desfavoritas:** Suas rádios favoritas são listadas na tela principal
+- **Reprodução das rádios:** Basta clicar no play para reproduzir a rádio que você quer ouvir
+- **Filtragem de Radios:** Filtre a rádio que deseja seja nos favoritos ou na listagem geral
 
-- Configure the top-level `parserOptions` property like this:
+
+______________
+
+## Instalação e execução
+
+Siga os passos abaixo para rodar localmente:
+
+### Pré Requisitos
+
+**Node.js**
+**NPM** 
+
+### Como instalar e rodar o projeto
+
+1. **Clone o repositorio**
+
+```git clone https://github.com/Michaelmascarenhas90/frontend-radio-browser```
+
+2. **Instale as dependencias**
+
+```npm install```
+
+3. **Iniciar a aplicação**
+
+```npm run dev``` ou ```npm run start```
+
+A aplicação está rodando na porta http://localhost:5173/
+
 
 ```js
 export default tseslint.config({
@@ -48,3 +80,5 @@ export default tseslint.config({
   },
 });
 ```
+
+This is a challenge by Coodesh
