@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Box, Container, Typography, useTheme } from '@mui/material'
+import {
+  Box,
+  Container,
+  IconButton,
+  TextField,
+  Typography,
+  useTheme,
+} from '@mui/material'
 import Header from '../../components/Header'
 import type { RadioData } from '../../types/radios.interface'
 import Drawer from '../../components/Drawer'
@@ -7,12 +14,16 @@ import { fetchRadios } from '../../service/fetchRadios'
 import CardRadio from '../../components/CardRadio'
 import SkeletonCard from '../../components/Skeleton'
 import { FavoriteProps } from '../../components/CardRadio/card.interface'
+import { SearchOutlined } from '@mui/icons-material'
 
 const Home = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 760)
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true)
   const [radios, setRadios] = useState<RadioData[]>([])
   const [favorites, setFavorites] = useState<FavoriteProps[]>([])
+  const [favoriteFiltered, setFavoriteFiltered] = useState<FavoriteProps[]>([])
+  const [openFilter, setOpenFilter] = useState<boolean>(false)
+  const [filter, setFilter] = useState<string>('')
   const theme = useTheme()
 
   const handleDrawer = () => {
@@ -37,8 +48,11 @@ const Home = () => {
 
   useEffect(() => {
     getRadio()
+  }, [])
+
+  useEffect(() => {
     getFavorites()
-  }, [getFavorites, radios])
+  }, [getFavorites])
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,6 +62,20 @@ const Home = () => {
     window.addEventListener('resize', handleResize)
   }, [])
 
+  useEffect(() => {
+    if (filter.length > 0) {
+      const filtered = favorites.filter((radio) =>
+        radio.name.toLowerCase().includes(filter.toLowerCase())
+      )
+      setFavoriteFiltered(filtered)
+
+    } else {
+      setFavoriteFiltered([])
+    }
+  }, [filter, favorites])
+
+
+  console.log({texto: filter, qtdResultados: favoriteFiltered.length})
   return (
     <body
       style={{
@@ -101,17 +129,81 @@ const Home = () => {
             gap: '16px',
           }}
         >
-          <Typography
-            variant="h4"
+          <Box
             sx={{
-              color: (theme) => theme.palette.text.primary,
-              marginTop: '16px',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              alignContent: 'center',
+              justifyContent: 'space-between',
             }}
           >
-            Favoritas
-          </Typography>
+            <Typography
+              variant="h4"
+              sx={{
+                color: (theme) => theme.palette.text.primary,
+                marginTop: '16px',
+              }}
+            >
+              Favoritas
+            </Typography>
+            <IconButton onClick={() => setOpenFilter((prev) => !prev)}>
+              <SearchOutlined
+                fontSize="large"
+                sx={{ color: (theme) => theme.palette.text.primary }}
+              />
+            </IconButton>
+          </Box>
+          {openFilter && (
+            <TextField
+              label="Buscar Rádio"
+              color="primary"
+              focused
+              placeholder="Busque sua rádio favorita"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+            />
+          )}
+          <>
+            {
+              filter.length > 0
+              ?
+              (
+                <Box
+            sx={{
+              width: '100%',
+              minHeight: '80px',
+              display: 'flex',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '16px',
+            }}
+          >
+            {favoriteFiltered.length > 0 ? (
+              favoriteFiltered.map((radio) => (
+                <CardRadio
+                  key={radio.radioId}
+                  radioId={radio.radioId}
+                  name={radio.name}
+                  imageUrl={radio.imageUrl}
+                  tags={radio.tags}
+                  country={radio.country}
+                  countryCode={radio.countryCode}
+                  radioUrl={radio.radioUrl}
+                  updateFavorites={() => getFavorites()}
+                />
+              ))
+            ) : (
+              <Typography variant="h5">não tem nada aqui...</Typography>
+            )}
+          </Box>
 
-          <Box
+              )
+              : 
+              (
+                <Box
             sx={{
               width: '100%',
               minHeight: '80px',
@@ -141,6 +233,10 @@ const Home = () => {
               <Typography variant="h5">não tem nada aqui...</Typography>
             )}
           </Box>
+                
+              )
+            }
+          </>
         </Box>
       </Container>
     </body>
