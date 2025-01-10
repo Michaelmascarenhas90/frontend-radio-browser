@@ -29,10 +29,11 @@ const Home = () => {
   }
 
   const getFavorites = useCallback(() => {
-    const favoritesStorage = JSON.parse(localStorage.getItem('favorites') || '[]')
+    const favoritesStorage = JSON.parse(
+      localStorage.getItem('favorites') || '[]'
+    )
     return setFavorites(favoritesStorage)
   }, [])
-
 
   useEffect(() => {
     getRadio()
@@ -97,14 +98,14 @@ const Home = () => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            gap: '16px'
+            gap: '16px',
           }}
         >
           <Typography
             variant="h4"
             sx={{
               color: (theme) => theme.palette.text.primary,
-              marginTop: '16px'
+              marginTop: '16px',
             }}
           >
             Favoritas
@@ -119,28 +120,27 @@ const Home = () => {
               flexWrap: 'wrap',
               justifyContent: 'center',
               alignItems: 'center',
-              gap: '16px'
+              gap: '16px',
             }}
           >
-            {
-              favorites.length > 0 
-              ? (favorites.map((radio) => (
-                
-                  <CardRadio
-                    key={radio.radioId}
-                    radioId={radio.radioId}
-                    name={radio.name}
-                    imageUrl={radio.imageUrl}
-                    tags={radio.tags}
-                    country={radio.country}
-                    countryCode={radio.countryCode}
-                    radioUrl={radio.radioUrl}
-                    updateFavorites={() => getFavorites()}
-                  />
-                
-              ))) 
-              : (<Typography variant='h5'>não tem nada aqui...</Typography>)}
-        </Box>
+            {favorites.length > 0 ? (
+              favorites.map((radio) => (
+                <CardRadio
+                  key={radio.radioId}
+                  radioId={radio.radioId}
+                  name={radio.name}
+                  imageUrl={radio.imageUrl}
+                  tags={radio.tags}
+                  country={radio.country}
+                  countryCode={radio.countryCode}
+                  radioUrl={radio.radioUrl}
+                  updateFavorites={() => getFavorites()}
+                />
+              ))
+            ) : (
+              <Typography variant="h5">não tem nada aqui...</Typography>
+            )}
+          </Box>
         </Box>
       </Container>
     </body>

@@ -11,7 +11,7 @@ import {
   Favorite,
   FavoriteBorderOutlined,
   PlayArrow,
-  Pause
+  Pause,
 } from '@mui/icons-material'
 import type { CardProps, FavoriteProps } from './card.interface'
 
@@ -22,18 +22,21 @@ const toggleFavorite = ({
   radioId,
   radioUrl,
   tags,
-  country
+  country,
 }: FavoriteProps) => {
   const saveFavoriteString = localStorage.getItem('favorites') || '[]'
-  const savedFavorites: FavoriteProps[] = JSON.parse(saveFavoriteString);
+  const savedFavorites: FavoriteProps[] = JSON.parse(saveFavoriteString)
 
-  const isFavorite = savedFavorites.find((favorite) => favorite.radioId === radioId);
+  const isFavorite = savedFavorites.find(
+    (favorite) => favorite.radioId === radioId
+  )
 
   if (isFavorite) {
-    const newFavorites = savedFavorites.filter((favorite) => favorite.radioId !== radioId)
+    const newFavorites = savedFavorites.filter(
+      (favorite) => favorite.radioId !== radioId
+    )
     localStorage.setItem('favorites', JSON.stringify(newFavorites))
   } else {
-
     const newFavorite: FavoriteProps = {
       name,
       radioId,
@@ -41,7 +44,7 @@ const toggleFavorite = ({
       countryCode,
       country,
       imageUrl,
-      tags
+      tags,
     }
 
     savedFavorites.push(newFavorite)
@@ -57,32 +60,33 @@ const CardRadio = ({
   tags,
   radioUrl,
   radioId,
-  updateFavorites
+  updateFavorites,
 }: CardProps) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
-  const [ isPlaying, seIsPlaying ] = useState<boolean>(false)
+  const [isPlaying, seIsPlaying] = useState<boolean>(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const handlePlaying = () => {
     if (audioRef.current) {
-      if(isPlaying) {
+      if (isPlaying) {
         audioRef.current.pause()
       } else {
         audioRef.current.play()
       }
 
-      seIsPlaying(prev => !prev)
-
-    } 
+      seIsPlaying((prev) => !prev)
+    }
   }
 
   const verifyFavorites = useCallback(() => {
-  const favoritesString = localStorage.getItem('favorites') || '[]';
-  const favorites: FavoriteProps[] = JSON.parse(favoritesString);
+    const favoritesString = localStorage.getItem('favorites') || '[]'
+    const favorites: FavoriteProps[] = JSON.parse(favoritesString)
 
-  const isFavorite = favorites.some((favorite) => favorite.radioId === radioId);
-  setIsFavorite(isFavorite);
-}, [radioId]);
+    const isFavorite = favorites.some(
+      (favorite) => favorite.radioId === radioId
+    )
+    setIsFavorite(isFavorite)
+  }, [radioId])
 
   const handleFavoriteRadio = () => {
     const favoriteObj = {
@@ -92,7 +96,7 @@ const CardRadio = ({
       countryCode,
       country,
       imageUrl,
-      tags
+      tags,
     }
     toggleFavorite(favoriteObj)
     verifyFavorites()
@@ -145,8 +149,7 @@ const CardRadio = ({
         </CardContent>
         <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
           <IconButton onClick={() => handlePlaying()} aria-label="play/pause">
-            {!isPlaying
-              ? (
+            {!isPlaying ? (
               <PlayArrow
                 sx={{
                   height: 38,
@@ -154,17 +157,17 @@ const CardRadio = ({
                   color: (theme) => theme.palette.text.primary,
                 }}
               />
-              ) : (
-                <Pause
-                  sx={{
-                    height: 38,
-                    width: 38,
-                    color: (theme) => theme.palette.text.primary,
-                  }}
-                />
-              )}
+            ) : (
+              <Pause
+                sx={{
+                  height: 38,
+                  width: 38,
+                  color: (theme) => theme.palette.text.primary,
+                }}
+              />
+            )}
           </IconButton>
-          <audio ref={audioRef} src={radioUrl} preload='auto' />
+          <audio ref={audioRef} src={radioUrl} preload="auto" />
         </Box>
       </Box>
       <Box
