@@ -13,7 +13,6 @@ type DrawerProps = {
 const Drawer = ({ contentDrawer, onClose, open, isMobile }: DrawerProps) => {
   return (
     <DrawerMui
-      // sx={{ bgcolor: 'red' }}
       open={open}
       onClose={onClose}
       PaperProps={{
