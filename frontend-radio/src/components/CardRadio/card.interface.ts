@@ -8,3 +8,5 @@ export type CardProps = {
   radioId: string
   updateFavorites: () => void
 }
+
+export type FavoriteProps = Omit<CardProps, 'updateFavorites'>

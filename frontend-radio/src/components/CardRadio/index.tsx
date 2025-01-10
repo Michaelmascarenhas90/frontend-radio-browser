@@ -12,19 +12,38 @@ import {
   FavoriteBorderOutlined,
   PlayArrow,
 } from '@mui/icons-material'
-import type { CardProps } from './card.interface'
+import type { CardProps, FavoriteProps } from './card.interface'
 
-const toggleFavorite = (radioId: string) => {
+const toggleFavorite = ({
+  name,
+  countryCode,
+  imageUrl,
+  radioId,
+  radioUrl,
+  tags,
+  country
+}: FavoriteProps) => {
   const saveFavoriteString = localStorage.getItem('favorites') || '[]'
-  const savedFavorites: string[] = JSON.parse(saveFavoriteString)
+  const savedFavorites: FavoriteProps[] = JSON.parse(saveFavoriteString);
 
-  const isFavorite = savedFavorites.includes(radioId)
+  const isFavorite = savedFavorites.find((favorite) => favorite.radioId === radioId);
 
   if (isFavorite) {
-    const newFavorites = savedFavorites.filter((id: string) => id !== radioId)
+    const newFavorites = savedFavorites.filter((favorite) => favorite.radioId !== radioId)
     localStorage.setItem('favorites', JSON.stringify(newFavorites))
   } else {
-    savedFavorites.push(radioId)
+
+    const newFavorite: FavoriteProps = {
+      name,
+      radioId,
+      radioUrl,
+      countryCode,
+      country,
+      imageUrl,
+      tags
+    }
+
+    savedFavorites.push(newFavorite)
     localStorage.setItem('favorites', JSON.stringify(savedFavorites))
   }
 }
@@ -35,18 +54,31 @@ const CardRadio = ({
   country,
   countryCode,
   tags,
+  radioUrl,
   radioId,
   updateFavorites
 }: CardProps) => {
   const [isFavorite, setIsFavorite] = useState<boolean>(false)
 
   const verifyFavorites = useCallback(() => {
-    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]')
-    setIsFavorite(favorites.includes(radioId))
-  }, [radioId])
+  const favoritesString = localStorage.getItem('favorites') || '[]';
+  const favorites: FavoriteProps[] = JSON.parse(favoritesString);
+
+  const isFavorite = favorites.some((favorite) => favorite.radioId === radioId);
+  setIsFavorite(isFavorite);
+}, [radioId]);
 
   const handleFavoriteRadio = () => {
-    toggleFavorite(radioId)
+    const favoriteObj = {
+      name,
+      radioId,
+      radioUrl,
+      countryCode,
+      country,
+      imageUrl,
+      tags
+    }
+    toggleFavorite(favoriteObj)
     verifyFavorites()
     updateFavorites()
   }

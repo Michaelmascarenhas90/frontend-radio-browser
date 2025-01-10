@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Box, Container, Typography, useTheme } from '@mui/material'
 import Header from '../../components/Header'
 import type { RadioData } from '../../types/radios.interface'
@@ -6,11 +6,13 @@ import Drawer from '../../components/Drawer'
 import { fetchRadios } from '../../service/fetchRadios'
 import CardRadio from '../../components/CardRadio'
 import SkeletonCard from '../../components/Skeleton'
+import { FavoriteProps } from '../../components/CardRadio/card.interface'
 
 const Home = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 760)
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true)
   const [radios, setRadios] = useState<RadioData[]>([])
+  const [favorites, setFavorites] = useState<FavoriteProps[]>([])
   const theme = useTheme()
 
   const handleDrawer = () => {
@@ -26,14 +28,15 @@ const Home = () => {
     }
   }
 
-  const getFavorites = () => {
-    return JSON.parse(localStorage.getItem('favorites') || '[]')
-  }
+  const getFavorites = useCallback(() => {
+    const favoritesStorage = JSON.parse(localStorage.getItem('favorites') || '[]')
+    return setFavorites(favoritesStorage)
+  }, [])
 
-  const favoriteRadios = radios.filter(radio => getFavorites().includes(radio.changeuuid))
 
   useEffect(() => {
     getRadio()
+    getFavorites()
   }, [radios])
 
   useEffect(() => {
@@ -64,6 +67,7 @@ const Home = () => {
               {radios.map((radio) => {
                 return (
                   <CardRadio
+                    key={radio.changeuuid}
                     radioId={radio.changeuuid}
                     name={radio.name}
                     imageUrl={radio.favicon}
@@ -111,24 +115,27 @@ const Home = () => {
               width: '100%',
               minHeight: '80px',
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
               justifyContent: 'center',
               alignItems: 'center',
+              gap: '16px'
             }}
           >
             {
-              favoriteRadios.length > 0 
-              ? (favoriteRadios.map((radio) => (
+              favorites.length > 0 
+              ? (favorites.map((radio) => (
                 
                   <CardRadio
-                    radioId={radio.changeuuid}
+                    key={radio.radioId}
+                    radioId={radio.radioId}
                     name={radio.name}
-                    imageUrl={radio.favicon}
+                    imageUrl={radio.imageUrl}
                     tags={radio.tags}
                     country={radio.country}
-                    countryCode={radio.countrycode}
-                    radioUrl={radio.url_resolved}
-                    updateFavorites={() => getRadio()}
+                    countryCode={radio.countryCode}
+                    radioUrl={radio.radioUrl}
+                    updateFavorites={() => getFavorites()}
                   />
                 
               ))) 
